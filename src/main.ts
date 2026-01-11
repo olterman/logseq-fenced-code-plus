@@ -4,12 +4,14 @@ import mermaidRenderer from './mermaid'
 import echartsRenderer from './echarts'
 import TikzjaxRenderer from './tikzjax'
 import htmlRenderer from './htmlmixed'
+import chordproRenderer from './chordpro'
 
 const Supports = {
   Mermaid: 'mermaid',
   Echarts: 'echarts',
   TikZJax: 'tikz',
   HTMLmixed: 'htmlmixed',
+  Chordpro: 'chordpro'
 }
 
 const settingsSchema: Array<SettingSchemaDesc> = [
@@ -31,6 +33,13 @@ const settingsSchema: Array<SettingSchemaDesc> = [
     key: 'htmlmixed',
     type: 'boolean',
     title: 'Support html mixed tags?',
+    description: 'Render with html mixed tags',
+    default: true
+  },
+    {
+    key: 'chordpro',
+    type: 'boolean',
+    title: 'Support chordpro blocks',
     description: 'Render with html mixed tags',
     default: true
   },
@@ -69,6 +78,15 @@ function main(baseInfo: LSPluginBaseInfo) {
       Supports.HTMLmixed, {
         edit: false,
         render: htmlRenderer,
+      }
+    )
+  }
+
+  if (settings.chordpro) {
+    logseq.Experiments.registerFencedCodeRenderer(
+      Supports.Chordpro, {
+        edit: false,
+        render: chordproRenderer,
       }
     )
   }
