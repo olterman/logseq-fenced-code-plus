@@ -9,11 +9,11 @@ function makeShiny(input: string): string {
     .chord-line - Applied to chord lines (pre element)
     .lyric-line - Applied to lyric lines (pre element)
 */
-  const preStyle = "background:none; padding: 0em 0em 0em 0em; margin: 0em 0 0em 0em;"
-  const chordStyle = "color: #c678dd; font-wight: bold;"
-  const lyricStyle = "color: #abb2bf;"
+  const preStyle = "background:none; padding: 0em 0em 0em 0em; margin: 0em 0 0em 0em;" // - Applied to all pre tags
+  const chordStyle = "color: #c678dd; font-wight: bold;" // - Applied to the chord line
+  const lyricStyle = "color: #abb2bf;" // - Applied to the lyric line
     //.lyric-line-only - Applied to lyric lines when chords are hidden
-    //.comment - Applied to comment lines
+  const commentStyle = "color: #2b6a45ff" //- Applied to comment lines
     //.comment-italic - Applied to italic comment lines
     //.comment-box - Applied to boxed comment lines
     //.highlight - Applied to highlighted text
@@ -43,7 +43,7 @@ function makeShiny(input: string): string {
     .replaceAll("<pre class=\"chord-line\">", "<pre class=\"chord-line\" style=\"" + preStyle + chordStyle + "\">")
     .replaceAll("<pre class=\"lyric-line\">", "<pre class=\"lyric-line\" style=\"" + preStyle + lyricStyle + "\">")
     //.lyric-line-only - Applied to lyric lines when chords are hidden
-    //.comment - Applied to comment lines
+    .replaceAll("<div class=\"comment\">", "<div class=\"comment\" style=\"" + commentStyle + "\">")
     //.comment-italic - Applied to italic comment lines
     //.comment-box - Applied to boxed comment lines
     //.highlight - Applied to highlighted text
