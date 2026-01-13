@@ -1,7 +1,7 @@
 import '@logseq/libs'
 import React, { useEffect } from 'react'
 
-import ChordproJS from 'chordprojs'
+import ChordSheetJS from 'chordsheetjs'
 
 function makeShiny(input: string): string {
   /* CHORDPRO CSS 
@@ -9,8 +9,9 @@ function makeShiny(input: string): string {
     .chord-line - Applied to chord lines (pre element)
     .lyric-line - Applied to lyric lines (pre element)
 */
-  const preStyle = "background:none; padding: 0em 0em 0em 0em; margin: 0em 0 0em 0em;" // - Applied to all pre tags
-  const chordStyle = "color: #c678dd; font-wight: bold;" // - Applied to the chord line
+  const preStyle = "font-family: monospace, sans-serif; background:none; padding: 0em 0em 0em 0em; margin: 0em 0 0em 0em;" // - Applied to all pre tags
+  const chordStyle = "color: #d318c3ff; font-wight: bold;" // - Applied to the chord line
+  //const chordTooltip =
   const lyricStyle = "color: #abb2bf;" // - Applied to the lyric line
     //.lyric-line-only - Applied to lyric lines when chords are hidden
   const commentStyle = "color: #2b6a45ff" //- Applied to comment lines
@@ -40,8 +41,8 @@ function makeShiny(input: string): string {
     //.artist - Applied to artist information
     //.key - Applied to key information
   return input
-    .replaceAll("<pre class=\"chord-line\">", "<pre class=\"chord-line\" style=\"" + preStyle + chordStyle + "\">")
-    .replaceAll("<pre class=\"lyric-line\">", "<pre class=\"lyric-line\" style=\"" + preStyle + lyricStyle + "\">")
+    .replaceAll("<pre class=\"chord-line\">", "<pre class=\"chord-line\" style=\"" + preStyle + " " + chordStyle + "\">")
+    .replaceAll("<pre class=\"lyric-line\">", "<pre class=\"lyric-line\" style=\"" + preStyle + " " + lyricStyle + "\">")
     //.lyric-line-only - Applied to lyric lines when chords are hidden
     .replaceAll("<div class=\"comment\">", "<div class=\"comment\" style=\"" + commentStyle + "\">")
     //.comment-italic - Applied to italic comment lines
@@ -74,16 +75,21 @@ function makeShiny(input: string): string {
 }
 
 export default function (props: { content: string }) {
-  const chordpro = ChordproJS();
   const { content } = props
   const elRef = React.useRef<HTMLDivElement>(null)
   const _host = logseq.Experiments.ensureHostScope()
+  const chordSheet = content.substring(1);
+  const parser = new ChordSheetJS.ChordProParser();
+  const song = parser.parse(chordSheet);
+  const formatter = new ChordSheetJS.ChordsOverWordsFormatter();
+  const disp = formatter.format(song);
 
   useEffect(() => {
-    const chordproParsed = makeShiny(chordpro.renderToHTML(content))
-    elRef.current.innerHTML = chordproParsed
+    //const chordproParsed = makeShiny(chordpro.format(content))
+    elRef.current.innerHTML = disp
+    //elRef.current.innerHTML = song
   }, [content])
 
-  return (<div className={'fcp-chordpro-container'} ref={elRef}></div>)
+  return (<div className={'fcp-chordpro-container'} ref={elRef} style='font-family: monospace, sans'></div>)
 }
 
